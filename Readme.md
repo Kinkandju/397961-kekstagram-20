@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Евгения Ямщикова](https://up.htmlacademy.ru/javascript/20/user/397961).
-* Наставник: `Неизвестно`.
+* Наставник: [Сергей Глазков](https://htmlacademy.ru/profile/id1194253).
 
 ---
 
