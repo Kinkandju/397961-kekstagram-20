@@ -1,11 +1,12 @@
 'use strict';
 
-var MIN_PICTURES_COUNT = 1;
-var MAX_PICTURES_COUNT = 25;
+var TOTAL_PHOTOS = 25;
 var MIN_AVATARS_COUNT = 1;
 var MAX_AVATARS_COUNT = 6;
 var MIN_RANDOM_COMMENTS_COUNT = 3;
 var MAX_RANDOM_COMMENTS_COUNT = 8;
+var MIN_LIKES_COUNT = 15;
+var MAX_LIKES_COUNT = 200;
 var MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -34,8 +35,6 @@ var NAMES = [
   'Бернард',
   'Авдотья'
 ];
-var MIN_LIKES_COUNT = 15;
-var MAX_LIKES_COUNT = 200;
 
 function getRandomInteger(min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
@@ -87,12 +86,12 @@ function getRandomLikesCount() {
 window.getPhotos = function () {
   var photoDescriptions = [];
 
-  for (var i = MIN_PICTURES_COUNT; i <= MAX_PICTURES_COUNT; i++) {
+  for (var i = 1; i <= TOTAL_PHOTOS; i++) {
     photoDescriptions.push({
       url: createPhotoUrl(i),
       description: getRandomDescription(),
       likes: getRandomLikesCount(),
-      comments: getRandomComments().length
+      comments: getRandomComments()
     });
   }
 

@@ -7,7 +7,7 @@ function createPictureElement(picture) {
 
   pictureElement.querySelector('.picture__img').src = picture.url;
   pictureElement.querySelector('.picture__likes').textContent = picture.likes;
-  pictureElement.querySelector('.picture__comments').textContent = picture.comments;
+  pictureElement.querySelector('.picture__comments').textContent = picture.comments.length;
 
   return pictureElement;
 }
@@ -16,10 +16,10 @@ var pictureContainer = document.querySelector('section.pictures.container');
 
 function addPhotos() {
   var fragment = document.createDocumentFragment();
-  var photoInfo = window.getPhotos();
+  var photoDescriptions = window.getPhotos();
 
-  for (var i = 0; i < photoInfo.length; i++) {
-    fragment.appendChild(createPictureElement(photoInfo[i]));
+  for (var i = 0; i < photoDescriptions.length; i++) {
+    fragment.appendChild(createPictureElement(photoDescriptions[i]));
   }
 
   pictureContainer.appendChild(fragment);
