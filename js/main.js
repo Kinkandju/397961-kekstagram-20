@@ -16,9 +16,10 @@ var pictureContainer = document.querySelector('section.pictures.container');
 
 function addPhotos() {
   var fragment = document.createDocumentFragment();
+  var photoInfo = window.getPhotos();
 
-  for (var photoIndex = 0; photoIndex < window.photoDescriptions.length; photoIndex++) {
-    fragment.appendChild(createPictureElement(window.photoDescriptions[photoIndex]));
+  for (var i = 0; i < photoInfo.length; i++) {
+    fragment.appendChild(createPictureElement(photoInfo[i]));
   }
 
   pictureContainer.appendChild(fragment);

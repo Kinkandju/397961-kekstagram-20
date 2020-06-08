@@ -4,6 +4,8 @@ var MIN_PICTURES_COUNT = 1;
 var MAX_PICTURES_COUNT = 25;
 var MIN_AVATARS_COUNT = 1;
 var MAX_AVATARS_COUNT = 6;
+var MIN_RANDOM_COMMENTS_COUNT = 3;
+var MAX_RANDOM_COMMENTS_COUNT = 8;
 var MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -13,14 +15,14 @@ var MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 var DESCRIPTIONS = [
-  'Где взять описание фотографии?',
+  'Кадр из телепрограммы "Загадка дыры".',
   'Момент похищения человека инопланетной тарелкой и вилкой.',
   'Кто-нибудь знает что это такое?',
   'Мне подарили ежа.',
-  'А это пень.',
+  'Шушпанчик читает шушпанишаду.',
   'Этот человек стоял слишком близко, мне пришлось в него плюнуть (фото размыто, эффект движения).',
   'Мой дедушка-массон на традиционном пятничном ритуальном собрании.',
-  'Я всё ещё не поняла где взять описание.'
+  'Кажется оно летит прямо на нас.'
 ];
 var NAMES = [
   'Никодим',
@@ -58,26 +60,20 @@ function getRandomName() {
 
 function getRandomComments() {
   var comments = [];
+  var randomCommentsCount = getRandomInteger(MIN_RANDOM_COMMENTS_COUNT, MAX_RANDOM_COMMENTS_COUNT);
 
-  for (var i = 0; i < MAX_PICTURES_COUNT; i++) {
+  for (var i = 0; i < randomCommentsCount; i++) {
     comments.push({
       avatar: getRandomAvatar(),
       message: getRandomMessage(),
       name: getRandomName()
     });
   }
-
-  return getRandomInteger(0, comments.length);
+  return comments;
 }
 
-function createPhotoUrl() {
-  var photoUrls = [];
-
-  for (var i = MIN_PICTURES_COUNT; i <= MAX_PICTURES_COUNT; i++) {
-    photoUrls.push('photos/' + i + '.jpg');
-  }
-
-  return photoUrls[i];
+function createPhotoUrl(id) {
+  return 'photos/' + id + '.jpg';
 }
 
 function getRandomDescription() {
@@ -88,17 +84,17 @@ function getRandomLikesCount() {
   return getRandomInteger(MIN_LIKES_COUNT, MAX_LIKES_COUNT);
 }
 
-window.photoDescriptions = [];
+window.getPhotos = function () {
+  var photoDescriptions = [];
 
-function getPhotos() {
-  for (var i = 0; i < MAX_PICTURES_COUNT; i++) {
-    window.photoDescriptions.push({
-      url: createPhotoUrl(),
+  for (var i = MIN_PICTURES_COUNT; i <= MAX_PICTURES_COUNT; i++) {
+    photoDescriptions.push({
+      url: createPhotoUrl(i),
       description: getRandomDescription(),
       likes: getRandomLikesCount(),
-      comments: getRandomComments()
+      comments: getRandomComments().length
     });
   }
-}
 
-getPhotos();
+  return photoDescriptions;
+};
