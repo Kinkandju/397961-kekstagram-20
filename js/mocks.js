@@ -46,7 +46,7 @@ function getRandomElement(elements) {
 }
 
 function getRandomAvatar() {
-  return 'img/avatar' + getRandomInteger(MIN_AVATARS_COUNT, MAX_AVATARS_COUNT) + '.svg';
+  return 'img/avatar-' + getRandomInteger(MIN_AVATARS_COUNT, MAX_AVATARS_COUNT) + '.svg';
 }
 
 function getRandomMessage() {
@@ -84,10 +84,10 @@ function getRandomLikesCount() {
 }
 
 window.getPhotos = function () {
-  var photoDescriptions = [];
+  var pictures = [];
 
   for (var i = 1; i <= TOTAL_PHOTOS; i++) {
-    photoDescriptions.push({
+    pictures.push({
       url: createPhotoUrl(i),
       description: getRandomDescription(),
       likes: getRandomLikesCount(),
@@ -95,5 +95,5 @@ window.getPhotos = function () {
     });
   }
 
-  return photoDescriptions;
+  return pictures;
 };
