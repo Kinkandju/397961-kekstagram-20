@@ -30,6 +30,8 @@ var bigPicture = document.querySelector('.big-picture');
 function showBigPicture(picture) {
   bigPicture.classList.remove('hidden');
 
+  document.body.classList.add('modal-open');
+
   bigPicture.querySelector('.big-picture__img img').src = picture.url;
   bigPicture.querySelector('.likes-count').textContent = picture.likes;
   bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
@@ -64,6 +66,3 @@ function showBigPicture(picture) {
 
 showSmallPictures(allPictures);
 showBigPicture(allPictures[0]);
-
-var body = document.querySelector('body');
-body.classList.add('modal-open');
