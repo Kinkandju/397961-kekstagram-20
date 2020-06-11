@@ -65,4 +65,4 @@ function showBigPicture(picture) {
 }
 
 showSmallPictures(allPictures);
-showBigPicture(allPictures[0]);
+// showBigPicture(allPictures[0]);
