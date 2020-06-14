@@ -1,12 +1,15 @@
 'use strict';
 
+var MAX_HASHTAGS = 5;
+var MAX_HASHTAG_LENGTH = 20;
+
 var uploadStart = document.querySelector('.img-upload__start');
 var uploadFile = document.querySelector('#upload-file');
 var uploadClose = document.querySelector('#upload-cancel');
 var uploadImg = document.querySelector('.img-upload__overlay');
 
 var onEscPress = function (evt) {
-  if (evt.key === 'Escape' && evt.target.tagName !== 'INPUT') {
+  if (evt.key === 'Escape' && evt.target.class === 'text__hashtags') {
     evt.preventDefault();
     closeSettings();
   }
@@ -35,7 +38,6 @@ uploadClose.addEventListener('click', function () {
 });
 
 // ---------------------------------------------------------------------------
-
 // Перемеенные для изменения масштаба загружаемого изображения
 // var SCALE_STEP = 25;
 // var MIN_SCALE = 25;
@@ -46,81 +48,123 @@ uploadClose.addEventListener('click', function () {
 // var scaleControl = document.querySelector('.scale__control--value').value;
 
 // ---------------------------------------------------------------------------
-
-// Переменные для применения фильтров к загружаемому изображению
-var sliderPin = document.querySelector('.effect-level__pin');
-// var effectLevel = document.querySelector('.effect-level__value').value; // Сюда записывается уровень эффекта
-// var levelLine = document.querySelector('.effect-level__line'); // Линия, по которой двигается ползунок
+var effectLevel = document.querySelector('.effect-level__value').value;
 var uploadPrewiew = document.querySelector('.img-upload__preview img');
 var uploadEffects = document.querySelector('.img-upload__effects');
-// var effectRadio = document.querySelector('.effects__radio').value;
 
-// Переключение фильтров изображения при нажатии на соответствующую радиокнопку
-// В эту функцию стоит добавить функцию по позиенению насыщенности
-// или они взаимодействуют отдельно друг с другом?
 var onFilterChange = function (evt) {
   uploadPrewiew.setAttribute('class', 'effects__preview--' + evt.target.value);
+
+  var effect = '';
+
+  switch (evt.target.value) {
+    case 'chrome':
+      effect = 'grayscale(' + effectLevel * 0.01 + ')';
+      break;
+    case 'sepia':
+      effect = 'sepia(' + effectLevel * 0.01 + ')';
+      break;
+    case 'marvin':
+      effect = 'invert(' + effectLevel + '%)';
+      break;
+    case 'phobos':
+      effect = 'blur(' + effectLevel * 0.03 + 'px)';
+      break;
+    case 'heat':
+      effect = 'brightness(' + effectLevel * 0.03 + ')';
+      break;
+    case 'none':
+      closeSettings();
+      break;
+  }
+
+  uploadPrewiew.style.filter = effect;
 };
 
 uploadEffects.addEventListener('change', onFilterChange);
 
-// 1) Когда ползунок sliderPin перемещается по горизонтали,
-// то результат перемещения (уровень эффекта) записывается в effectLevel.
-// Но пока ползунок не перемещается, что делать?
-// Я вообще не понимаю этот момент, что там с чем взаимодействует.
+var pin = document.querySelector('.effect-level__pin');
+var levelLine = document.querySelector('.effect-level__line');
 
-// 2) Если уровень эффекта effectLevel изменился, то параллельно с ним
-// изменяются стили изображения uploadPrewiew.style.filter?
-// chrome --> filter: grayscale(' + effectLevel / 0.01 + ');
-// sepia --> filter: sepia(' + effectLevel / 0.01 + ');
-// marvin --> filter: invert(' + effectLevel + '%);
-// phobos --> filter: blur(' + effectLevel * 0.03 + 'px);
-// heat --> filter: brightness(' + effectLevel * 0.03 + ');
-// none --> filter: '';
-
-// Если выбрана радиокнопка effectRadio со значением "Оригинал" (value="none"),
-// то надо закрыть слайдер closeSettings();
-// То есть uploadPrewiew.classList('none'); (или uploadPrewiew.className('none')?) добавить в closeSettings()?
-
-
-// Обработчик события, который будет изменять уровень насыщенности фильтра изображения
-sliderPin.addEventListener('mouseup', function () {
-
+pin.addEventListener('mouseup', function (evt) {
+  var totalEffectValue = levelLine.clientWidth;
+  var currentSliderPosition = evt.target.offsetLeft;
+  var effectValue = Math.floor((currentSliderPosition / totalEffectValue) * 100);
+  effectLevel = effectValue;
 });
 
-// ---------------------------------------------------------------------------
+var hashtagInput = document.querySelector('.text__hashtags');
+var re = /#[a-zA-Zа-яА-ЯёЁ0-9]*/i;
 
-// Валидация хэш-тегов
-var MAX_HASHTAGS = 5;
-var hashtagInput = document.querySelector('.text__hashtags').value;
-// var re = /#[a-zA-Zа-яА-Я0-9]*\s/i;
-// Стоит ли указывать здесь \s?
-// В таблице написано, что он соответствует одиночному символу пустого пространства.
-// А если будет введен один хэш-тег? Или надо делать отдельную проверку на пробел?
-
-
-// 1) Добавляем хэш-теги в массив и проверяем чтобы их было не больше 5
-// 2) Можно ли использовать метод split? И стоит ли?
-// 3) Стоит ли в функции addHashtags добавлять ещё одну проверку на совпадение хэш-тегов?
-// Для проверки нужно перебирать все хэш-теги и сравнивать их друг с другом?
-// Или можно сделать вот такую проверку (хэш-тег1 === хэш-тег2) ? invalid : valid  ?
-// Затем следует сравнивать хэш-теги с регулярными выражениями?
-
-function addHashtags(hashtag) {
-  var hashtags = [];
-  for (var i = 0; i < hashtag.length; i++) {
-    hashtags.push(hashtag[i].toLowerCase());
-
-    if (hashtag.length > MAX_HASHTAGS) {
-      hashtagInput.setCustomValidity('Не больше пяти хэш-тегов.');
-    }
-  }
-  return hashtags;
+function parseHashtag(textHashtag) {
+  return textHashtag.value.toLowerCase().split(' ');
 }
 
-addHashtags();
+function isHashtag(textHashtag) {
+  return re.test(textHashtag);
+}
 
-// Вроде это проверка вводимых данных с регулярным выражением
-// if (re.test(hashtagInput)) {
-//
-// }
+function isOnlyLattice(textHashtag) {
+  if (textHashtag.value === '#') {
+    return false;
+  }
+  return true;
+}
+
+function isGapsInside(textHashtag) {
+  for (var i = 0; i < textHashtag.length; i++) {
+    if (textHashtag[i].indexOf('#', 1) !== -1 || textHashtag[i] === '') {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isHashtagsRepeat(textHashtag) {
+  for (var i = 1; i < textHashtag.length; i++) {
+    for (var j = i + 1; j < textHashtag.length; j++) {
+      if (textHashtag[i] === textHashtag[j]) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function isLongHashtag(textHashtag, longHashtag) {
+  for (var i = 0; i < textHashtag.length; i++) {
+    if (textHashtag[i].length < longHashtag) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function isMaxHashtags(textHashtag, maxHashtags) {
+  if (textHashtag.length < maxHashtags) {
+    return true;
+  }
+  return false;
+}
+
+var validateHashtags = function () {
+  var hashtags = parseHashtag(hashtagInput);
+
+  if (!isHashtag(hashtags)) {
+    hashtagInput.setCustomValidity('Хэш-тег написан неправильно.');
+  } else if (isOnlyLattice(hashtags)) {
+    hashtagInput.setCustomValidity('Хэш-тег не может состоять из одного символа.');
+  } else if (isGapsInside(hashtags)) {
+    hashtagInput.setCustomValidity('Хэш-теги разделяются пробелами.');
+  } else if (isLongHashtag(hashtags, MAX_HASHTAG_LENGTH)) {
+    hashtagInput.setCustomValidity('Максимальная длина хэш-тега - ' + MAX_HASHTAG_LENGTH + ' символов.');
+  } else if (isHashtagsRepeat(hashtags)) {
+    hashtagInput.setCustomValidity('Хэш-теги не должны повторяться.');
+  } else if (isMaxHashtags(hashtags, MAX_HASHTAGS)) {
+    hashtagInput.setCustomValidity('Не больше ' + MAX_HASHTAGS + ' хэш-тегов.');
+  } else {
+    hashtagInput.setCustomValidity = '';
+  }
+};
+
+hashtagInput.addEventListener('input', validateHashtags);

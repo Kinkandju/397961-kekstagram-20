@@ -87,14 +87,14 @@ var onBigPictureClose = function () {
 
 var picturesLink = document.querySelectorAll('.picture__img');
 
-for (var i = 0; i < picturesLink.length; i++) {
-  var onPhotoClick = function (chosenPicture, pictureIndex) {
-    chosenPicture.addEventListener('click', function () {
-      onBigPictureOpen(showBigPicture(pictureIndex));
-    });
-  };
+var elc = function (element, data) {
+  element.addEventListener('click', function () {
+    onBigPictureOpen(showBigPicture(data));
+  });
+};
 
-  onPhotoClick(picturesLink[i], allPictures[i]);
+for (var i = 0; i < picturesLink.length; i++) {
+  elc(picturesLink[i], allPictures[i]);
 }
 
 bigPictureClose.addEventListener('click', onBigPictureClose);
