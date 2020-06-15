@@ -87,14 +87,14 @@ var onBigPictureClose = function () {
 
 var picturesLink = document.querySelectorAll('.picture__img');
 
-var elc = function (element, data) {
+var interrelationPictures = function (element, data) {
   element.addEventListener('click', function () {
     onBigPictureOpen(showBigPicture(data));
   });
 };
 
 for (var i = 0; i < picturesLink.length; i++) {
-  elc(picturesLink[i], allPictures[i]);
+  interrelationPictures(picturesLink[i], allPictures[i]);
 }
 
 bigPictureClose.addEventListener('click', onBigPictureClose);
