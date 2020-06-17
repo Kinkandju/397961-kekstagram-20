@@ -1,5 +1,6 @@
 'use strict';
-
+// ----------------------------------------------------------------------------
+// Модуль создания и добавления маленьких изображений
 var pictureTemplate = document.querySelector('#picture');
 
 function createPictureElement(picture) {
@@ -25,6 +26,10 @@ function showSmallPictures() {
   pictureContainer.appendChild(fragment);
 }
 
+showSmallPictures(allPictures);
+
+// ----------------------------------------------------------------------------
+// Модуль показа большого изображения
 var bigPicture = document.querySelector('.big-picture');
 
 function showBigPicture(picture) {
@@ -60,13 +65,14 @@ function showBigPicture(picture) {
   showComments(commentsContainer, picture.comments);
 }
 
-showSmallPictures(allPictures);
-
+// ----------------------------------------------------------------------------
+// Модуль открытия/закрытия большого изображения
 var bigPictureClose = document.querySelector('.big-picture__cancel');
 
 var onEscPress = function (evt) {
   if (evt.key === 'Escape') {
     evt.preventDefault();
+
     onBigPictureClose();
   }
 };
@@ -74,8 +80,6 @@ var onEscPress = function (evt) {
 var onBigPictureOpen = function () {
   bigPicture.classList.remove('hidden');
   document.body.classList.add('modal-open');
-
-  document.addEventListener('keydown', onEscPress);
 };
 
 var onBigPictureClose = function () {
@@ -85,16 +89,27 @@ var onBigPictureClose = function () {
   document.removeEventListener('keydown', onEscPress);
 };
 
-var picturesLink = document.querySelectorAll('.picture__img');
+var picturesLink = document.querySelectorAll('.picture');
 
-var interrelationPictures = function (element, data) {
-  element.addEventListener('click', function () {
-    onBigPictureOpen(showBigPicture(data));
-  });
-};
+function interrelationPictures(listener, element, data) {
+  if (listener === 'click') {
+    element.addEventListener(listener, function () {
+      onBigPictureOpen(showBigPicture(data));
+    });
+  } else if (listener === 'keydown') {
+    element.addEventListener(listener, function (evt) {
+      if (evt.key === 'Enter') {
+        onBigPictureOpen(showBigPicture(data));
+      }
+    });
+    document.addEventListener('keydown', onEscPress);
+  }
+}
 
 for (var i = 0; i < picturesLink.length; i++) {
-  interrelationPictures(picturesLink[i], allPictures[i]);
+  interrelationPictures('click', picturesLink[i], allPictures[i]);
+  interrelationPictures('keydown', picturesLink[i], allPictures[i]);
 }
 
 bigPictureClose.addEventListener('click', onBigPictureClose);
+bigPictureClose.addEventListener('keydown', onBigPictureClose);

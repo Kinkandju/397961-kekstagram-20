@@ -6,14 +6,22 @@ var MAX_SCALE = 100;
 var MAX_HASHTAGS = 5;
 var MAX_HASHTAG_LENGTH = 20;
 
-var uploadStart = document.querySelector('.img-upload__start');
 var uploadFile = document.querySelector('#upload-file');
 var uploadClose = document.querySelector('#upload-cancel');
 var uploadImg = document.querySelector('.img-upload__overlay');
+var uploadForm = document.querySelector('.img-upload__form');
+var uploadStart = document.querySelector('.img-upload__start');
+
+var hashtagsText = document.querySelector('.text__hashtags');
+var hashtagDescription = document.querySelector('.text__description');
 
 var onEscPress = function (evt) {
-  if (evt.key === 'Escape' && evt.target.class === 'text__hashtags') {
+  if (evt.key === 'Escape' && evt.target !== hashtagsText && evt.target !== hashtagDescription) {
+    // Если при фокус находится в поле ввода хэш-тега или в поле ввода
+    // комментария, при нажатии Esc появляется ещё одна вертикальная
+    // полоса прокрутки, у элемента body удаляется класс modal-open.
     evt.preventDefault();
+
     closeSettings();
   }
 };
@@ -22,17 +30,25 @@ var openSettings = function () {
   uploadImg.classList.remove('hidden');
   document.body.classList.add('modal-open');
   uploadEffectLevel.classList.add('hidden');
-  resizePicture();
 
-  document.addEventListener('keydown', onEscPress);
+  uploadFile.value = '';
+  scaleControl.value = '100%';
+  picturePreview.className = ''; // Если изображение выбирается второй раз
+  // подряд, то при уменьшении или увеличении масштаба происходит расчет от
+  // старого значения, которое было выбрано в первый раз.
+  // Например, при первом просмотре было выбрано 50%. При последующем
+  // просмотре в окне показано 100%, если нажать на + , то станет 75%.
+  picturePreview.style.transform = 'scale(1)';
+  uploadPrewiew.style.filter = 'none';
+
+  uploadForm.addEventListener('keydown', onEscPress);
 };
 
 var closeSettings = function () {
   uploadImg.classList.add('hidden');
-  uploadFile.value = '';
-  scaleControl.value = BASE_SCALE;
+  document.body.classList.remove('modal-open');
 
-  document.removeEventListener('keydown', onEscPress);
+  uploadForm.removeEventListener('keydown', onEscPress);
 };
 
 uploadStart.addEventListener('change', openSettings);
@@ -71,9 +87,10 @@ scaleControlBigger.addEventListener('click', onControlBiggerClick);
 
 // ---------------------------------------------------------------------------
 // Модуль изменения фильтра загружаемого изображения
-var effectLevel = document.querySelector('.effect-level__value').value;
 var uploadPrewiew = document.querySelector('.img-upload__preview img');
 var uploadEffectLevel = document.querySelector('.img-upload__effect-level');
+var effectLevelContainer = document.querySelector('.effect-level__value');
+var effectLevel = effectLevelContainer.value;
 
 var onFilterChange = function (evt) {
   uploadEffectLevel.classList.remove('hidden');
@@ -115,7 +132,7 @@ pin.addEventListener('mouseup', function (evt) {
   var totalEffectValue = levelLine.clientWidth;
   var currentSliderPosition = evt.target.offsetLeft;
   var effectValue = Math.floor((currentSliderPosition / totalEffectValue) * 100);
-  document.querySelector('.effect-level__value').value = effectValue;
+  effectLevel = effectValue;
 });
 
 // ---------------------------------------------------------------------------
@@ -123,36 +140,36 @@ pin.addEventListener('mouseup', function (evt) {
 var hashtagInput = document.querySelector('.text__hashtags');
 var re = /^#[a-zA-Zа-яА-ЯёЁ0-9]*/i;
 
-function parseHashtag(textHashtag) {
-  return textHashtag.value.toLowerCase().split(' ');
+function parseHashtag(textHashtags) {
+  return textHashtags.value.toLowerCase().split(' ');
 }
 
-function isHashtag(textHashtag) {
-  return re.test(textHashtag);
+function isHashtag(textHashtags) {
+  return re.test(textHashtags);
 }
 
-function isOnlyLattice(textHashtag) {
-  for (var i = 0; i < textHashtag.length; i++) {
-    if (textHashtag[i].charAt(0) !== '#' || textHashtag[i].length === 1) {
+function isOnlyLattice(textHashtags) {
+  for (var i = 0; i < textHashtags.length; i++) {
+    if (textHashtags[i].charAt(0) !== '#' || textHashtags[i].length === 1) {
       return true;
     }
   }
   return false;
 }
 
-function isGapsInside(textHashtag) {
-  for (var i = 0; i < textHashtag.length; i++) {
-    if (textHashtag[i].indexOf('#', 1) !== -1 || textHashtag[i] === '') {
+function isGapsInside(textHashtags) {
+  for (var i = 0; i < textHashtags.length; i++) {
+    if (textHashtags[i].indexOf('#', 1) !== -1 || textHashtags[i] === '') {
       return true;
     }
   }
   return false;
 }
 
-function isHashtagsRepeat(textHashtag) {
+function isHashtagsRepeat(textHashtags) {
   var valuesSoFar = Object.create(null);
-  for (var i = 0; i < textHashtag.length; i++) {
-    var value = textHashtag[i];
+  for (var i = 0; i < textHashtags.length; i++) {
+    var value = textHashtags[i];
     if (value in valuesSoFar) {
       return true;
     }
@@ -170,15 +187,15 @@ function maxHashtagLength(textHashtags, longHashtag) {
   return false;
 }
 
-function isMaxHashtags(textHashtag, maxHashtags) {
-  return textHashtag.length > maxHashtags;
+function isMaxHashtags(textHashtags, maxHashtags) {
+  return textHashtags.length > maxHashtags;
 }
 
 var validateHashtags = function () {
   var hashtags = parseHashtag(hashtagInput);
 
   if (!isHashtag(hashtags)) {
-    hashtagInput.setCustomValidity('Хэш-тег написан неправильно.');
+    hashtagInput.setCustomValidity('Хэш-тег написан неверно.');
   } else if (isOnlyLattice(hashtags)) {
     hashtagInput.setCustomValidity('Хэш-тег не может состоять из одного символа.');
   } else if (isGapsInside(hashtags)) {
