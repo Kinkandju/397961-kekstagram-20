@@ -6,17 +6,17 @@ var MAX_SCALE = 100;
 var MAX_HASHTAGS = 5;
 var MAX_HASHTAG_LENGTH = 20;
 
-var uploadFile = document.querySelector('#upload-file');
+// var uploadFile = document.querySelector('#upload-file');
 var uploadClose = document.querySelector('#upload-cancel');
 var uploadImg = document.querySelector('.img-upload__overlay');
-var uploadForm = document.querySelector('.img-upload__form');
+// var uploadForm = document.querySelector('.img-upload__form');
 var uploadStart = document.querySelector('.img-upload__start');
 
-var hashtagsText = document.querySelector('.text__hashtags');
+var hashtagInput = document.querySelector('.text__hashtags');
 var hashtagDescription = document.querySelector('.text__description');
 
 var onEscPress = function (evt) {
-  if (evt.key === 'Escape' && evt.target !== hashtagsText && evt.target !== hashtagDescription) {
+  if (evt.key === 'Escape' && evt.target !== hashtagInput && evt.target !== hashtagDescription) {
     // Если при фокус находится в поле ввода хэш-тега или в поле ввода
     // комментария, при нажатии Esc появляется ещё одна вертикальная
     // полоса прокрутки, у элемента body удаляется класс modal-open.
@@ -26,29 +26,35 @@ var onEscPress = function (evt) {
   }
 };
 
+
+// Если изображение выбирается второй раз
+// подряд, то при уменьшении или увеличении масштаба происходит расчет от
+// старого значения, которое было выбрано в первый раз.
+// Например, при первом просмотре было выбрано 50%. При последующем
+// просмотре в окне показано 100%, если нажать на + , то станет 75%.
+
+
 var openSettings = function () {
   uploadImg.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  uploadEffectLevel.classList.add('hidden');
 
-  uploadFile.value = '';
+  uploadEffectLevel.classList.add('hidden');
   scaleControl.value = '100%';
-  picturePreview.className = ''; // Если изображение выбирается второй раз
-  // подряд, то при уменьшении или увеличении масштаба происходит расчет от
-  // старого значения, которое было выбрано в первый раз.
-  // Например, при первом просмотре было выбрано 50%. При последующем
-  // просмотре в окне показано 100%, если нажать на + , то станет 75%.
   picturePreview.style.transform = 'scale(1)';
+  picturePreview.className = '';
   uploadPrewiew.style.filter = 'none';
 
-  uploadForm.addEventListener('keydown', onEscPress);
+  document.addEventListener('keydown', onEscPress);
 };
 
 var closeSettings = function () {
   uploadImg.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
-  uploadForm.removeEventListener('keydown', onEscPress);
+  hashtagInput = '';
+  hashtagDescription = '';
+
+  document.removeEventListener('keydown', onEscPress);
 };
 
 uploadStart.addEventListener('change', openSettings);
@@ -132,20 +138,24 @@ pin.addEventListener('mouseup', function (evt) {
   var totalEffectValue = levelLine.clientWidth;
   var currentSliderPosition = evt.target.offsetLeft;
   var effectValue = Math.floor((currentSliderPosition / totalEffectValue) * 100);
-  effectLevel = effectValue;
+  effectLevelContainer.value = effectValue;
 });
 
 // ---------------------------------------------------------------------------
 // Модуль валидации
-var hashtagInput = document.querySelector('.text__hashtags');
 var re = /^#[a-zA-Zа-яА-ЯёЁ0-9]*/i;
 
 function parseHashtag(textHashtags) {
-  return textHashtags.value.toLowerCase().split(' ');
+  return textHashtags.toLowerCase().split(' ');
 }
 
 function isHashtag(textHashtags) {
-  return re.test(textHashtags);
+  for (var i = 0; i < textHashtags.length; i++) {
+    if (!re.test(textHashtags[i])) {
+      return false;
+    }
+  }
+  return true;
 }
 
 function isOnlyLattice(textHashtags) {
@@ -192,7 +202,7 @@ function isMaxHashtags(textHashtags, maxHashtags) {
 }
 
 var validateHashtags = function () {
-  var hashtags = parseHashtag(hashtagInput);
+  var hashtags = parseHashtag(hashtagInput.value);
 
   if (!isHashtag(hashtags)) {
     hashtagInput.setCustomValidity('Хэш-тег написан неверно.');

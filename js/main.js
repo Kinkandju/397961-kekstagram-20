@@ -91,19 +91,22 @@ var onBigPictureClose = function () {
 
 var picturesLink = document.querySelectorAll('.picture');
 
-function interrelationPictures(listener, element, data) {
-  if (listener === 'click') {
-    element.addEventListener(listener, function () {
-      onBigPictureOpen(showBigPicture(data));
-    });
-  } else if (listener === 'keydown') {
-    element.addEventListener(listener, function (evt) {
-      if (evt.key === 'Enter') {
-        onBigPictureOpen(showBigPicture(data));
-      }
-    });
-    document.addEventListener('keydown', onEscPress);
+function interrelationPictures(listener, element, pictures) {
+  switch (listener) {
+    case 'click':
+      element.addEventListener(listener, function () {
+        onBigPictureOpen(showBigPicture(pictures));
+      });
+      break;
+    case 'keydown':
+      element.addEventListener(listener, function (evt) {
+        if (evt.key === 'Enter') {
+          onBigPictureOpen(showBigPicture(pictures));
+        }
+      });
+      break;
   }
+  document.addEventListener('keydown', onEscPress);
 }
 
 for (var i = 0; i < picturesLink.length; i++) {
