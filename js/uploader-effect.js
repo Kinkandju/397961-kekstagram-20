@@ -37,15 +37,54 @@
   };
 
   var uploadEffects = document.querySelector('.img-upload__effects');
+
   uploadEffects.addEventListener('change', onFilterChange);
 
   var pin = document.querySelector('.effect-level__pin');
   var levelLine = document.querySelector('.effect-level__line');
+  var depthLine = document.querySelector('.effect-level__depth');
 
-  pin.addEventListener('mouseup', function (evt) {
+  pin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
     var totalEffectValue = levelLine.clientWidth;
-    var currentSliderPosition = evt.target.offsetLeft;
-    var effectValue = Math.floor((currentSliderPosition / totalEffectValue) * 100);
-    effectLevelContainer.value = effectValue;
+    var sliderPositionLimits = {
+      min: 0,
+      max: totalEffectValue
+    };
+
+    var startCoords = evt.clientX;
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = startCoords - moveEvt.clientX;
+
+      startCoords = moveEvt.clientX;
+
+      if (startCoords > levelLine.getBoundingClientRect().right) {
+        pin.style.left = sliderPositionLimits.max + 'px';
+      } else if (startCoords < levelLine.getBoundingClientRect().left) {
+        pin.style.left = sliderPositionLimits.min + 'px';
+      } else {
+        pin.style.left = pin.offsetLeft - shift + 'px';
+      }
+
+      depthLine.style.width = pin.style.left;
+
+      var currentSliderPosition = pin.offsetLeft;
+      var effectValue = Math.floor((currentSliderPosition / totalEffectValue) * 100);
+      effectLevelContainer.value = effectValue;
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
 })();

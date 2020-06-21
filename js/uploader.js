@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
+  var uploadStart = document.querySelector('#upload-file');
   var uploadClose = document.querySelector('#upload-cancel');
   var uploadImg = document.querySelector('.img-upload__overlay');
-  var uploadStart = document.querySelector('.img-upload__start');
 
   var scaleControl = document.querySelector('.scale__control--value');
   var picturePreview = document.querySelector('.img-upload__preview');
