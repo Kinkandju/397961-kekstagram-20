@@ -1,9 +1,9 @@
 'use strict';
 
 (function () {
+  var uploadStart = document.querySelector('#upload-file');
   var uploadClose = document.querySelector('#upload-cancel');
   var uploadImg = document.querySelector('.img-upload__overlay');
-  var uploadStart = document.querySelector('.img-upload__start');
 
   var scaleControl = document.querySelector('.scale__control--value');
   var picturePreview = document.querySelector('.img-upload__preview');
@@ -22,13 +22,13 @@
   };
 
   // Если выйти из окна загрузки с помощью Esc, то при повторном добавлении
-  // этой же фотографии окно загрузки не открывается.
+  // этой же фотографии окно загрузки не открывается (п.1.3).
 
   // Если изображение выбирается второй раз
   // подряд, то при уменьшении или увеличении масштаба происходит расчет от
   // старого значения, которое было выбрано в первый раз.
   // Например, при первом просмотре было выбрано 50%. При последующем
-  // просмотре в окне показано 100%, если нажать на + , то станет 75%.
+  // просмотре в окне показано 100%, если нажать на + , то станет 75% (п.2.1).
 
 
   var openSettings = function () {
