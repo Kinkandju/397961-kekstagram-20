@@ -29,14 +29,14 @@
 
     var allSmallPictures = document.querySelectorAll('.picture');
 
-    var addHandler = function (element, data, index) {
-      element[index].addEventListener('click', function (evt) {
-        window.picturePopup.bigPictureOpen(evt, data[index]);
+    var addHandler = function (element, data) {
+      element.addEventListener('click', function (evt) {
+        window.picturePopup.bigPictureOpen(evt, data);
       });
     };
 
     for (var i = 0; i < allSmallPictures.length; i++) {
-      addHandler(allSmallPictures, picturesData, i);
+      addHandler(allSmallPictures[i], picturesData[i]);
     }
   });
 })();
