@@ -1,10 +1,11 @@
 'use strict';
 
 (function () {
+  var MAX_COMMENTS = 5;
   var bigPicture = document.querySelector('.big-picture');
 
   function showBigPicture(picture) {
-    // bigPicture.classList.remove('hidden');
+    bigPicture.classList.remove('hidden');
 
     bigPicture.querySelector('.big-picture__img img').src = picture.url;
     bigPicture.querySelector('.likes-count').textContent = picture.likes;
@@ -31,16 +32,15 @@
     function showComments(container, comments) {
       container.innerHTML = '';
 
-      for (var i = 0; i < comments.length; i++) {
+      for (var i = 0; i < MAX_COMMENTS; i++) {
         container.append(createCommentElement(comments[i]));
       }
     }
+
     showComments(commentsContainer, picture.comments);
 
-    // document.body.classList.add('modal-open');
+    document.body.classList.add('modal-open');
   }
-
-  var bigPictureClose = document.querySelector('.big-picture__cancel');
 
   var onEscPress = function (evt) {
     if (evt.key === 'Escape') {
@@ -50,21 +50,14 @@
     }
   };
 
-  // window.picturePopup = {
-  //   bigPictureOpen: function (evt, picture) {
-  //     evt.preventDefault();
-  //
-  //     showBigPicture(picture);
-  //
-  //     document.addEventListener('keydown', onEscPress);
-  //   }
-  // };
+  window.picturePopup = {
+    bigPictureOpen: function (evt, picture) {
+      evt.preventDefault();
 
-  var onBigPictureOpen = function () {
-    bigPicture.classList.remove('hidden');
-    document.body.classList.add('modal-open');
+      showBigPicture(picture);
 
-    document.addEventListener('keydown', onEscPress);
+      document.addEventListener('keydown', onEscPress);
+    }
   };
 
   var onBigPictureClose = function () {
@@ -74,30 +67,7 @@
     document.removeEventListener('keydown', onEscPress);
   };
 
-  var picturesLink = document.querySelectorAll('.picture');
-  var allPictures = window.mocks.getPhotos();
-
-  function interrelationPictures(listener, element, pictures) {
-    switch (listener) {
-      case 'click':
-        element.addEventListener(listener, function () {
-          onBigPictureOpen(showBigPicture(pictures));
-        });
-        break;
-      case 'keydown':
-        element.addEventListener(listener, function (evt) {
-          if (evt.key === 'Enter') {
-            onBigPictureOpen(showBigPicture(pictures));
-          }
-        });
-        break;
-    }
-  }
-
-  for (var i = 0; i < picturesLink.length; i++) {
-    interrelationPictures('click', picturesLink[i], allPictures[i]);
-    interrelationPictures('keydown', picturesLink[i], allPictures[i]);
-  }
+  var bigPictureClose = document.querySelector('.big-picture__cancel');
 
   bigPictureClose.addEventListener('click', onBigPictureClose);
   bigPictureClose.addEventListener('keydown', onBigPictureClose);
