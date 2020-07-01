@@ -33,6 +33,11 @@
       hashtagInput.setCustomValidity('Не больше ' + MAX_HASHTAGS + ' хэш-тегов.');
     } else {
       hashtagInput.setCustomValidity('');
+      hashtagInput.classList.remove('text_invalid');
+    }
+
+    if (!hashtagInput.validity.valid) {
+      hashtagInput.classList.add('text_invalid');
     }
   };
 

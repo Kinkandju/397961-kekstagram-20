@@ -13,18 +13,30 @@
     return pictureElement;
   }
 
-  var pictureContainer = document.querySelector('section.pictures.container');
-  var allPictures = window.mocks.getPhotos();
-
-  function showSmallPictures() {
+  function showSmallPictures(pictures) {
+    var pictureContainer = document.querySelector('section.pictures.container');
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < allPictures.length; i++) {
-      fragment.appendChild(createPictureElement(allPictures[i]));
+    for (var i = 0; i < pictures.length; i++) {
+      fragment.appendChild(createPictureElement(pictures[i]));
     }
-
     pictureContainer.appendChild(fragment);
   }
 
-  showSmallPictures(allPictures);
+  window.backend.load(function (picturesData) {
+
+    showSmallPictures(picturesData);
+
+    var allSmallPictures = document.querySelectorAll('.picture');
+
+    var addHandler = function (element, data) {
+      element.addEventListener('click', function (evt) {
+        window.picturePopup.bigPictureOpen(evt, data);
+      });
+    };
+
+    for (var i = 0; i < allSmallPictures.length; i++) {
+      addHandler(allSmallPictures[i], picturesData[i]);
+    }
+  });
 })();
