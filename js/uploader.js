@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var DEFAULT_SCALE = '100';
   var uploadStart = document.querySelector('#upload-file');
   var uploadClose = document.querySelector('#upload-cancel');
   var uploadImg = document.querySelector('.img-upload__overlay');
@@ -35,21 +36,28 @@
     uploadImg.classList.remove('hidden');
     document.body.classList.add('modal-open');
 
-    uploadEffectLevel.classList.add('hidden');
-    scaleControl.value = '100%';
-    picturePreview.style.transform = '';
-    picturePreview.className = '';
-    uploadPrewiew.style.filter = 'none';
+    scaleControl.value = DEFAULT_SCALE + '%';
+    picturePreview.style.transform = 'scale(1)';
 
     document.addEventListener('keydown', onEscPress);
+  };
+
+  window.uploader = {
+    resetSettings: function () {
+      hashtagInput.value = '';
+      hashtagDescription.value = '';
+
+      uploadEffectLevel.classList.add('hidden');
+      picturePreview.className = '';
+      uploadPrewiew.style.filter = 'none';
+    }
   };
 
   var closeSettings = function () {
     uploadImg.classList.add('hidden');
     document.body.classList.remove('modal-open');
 
-    hashtagInput.value = '';
-    hashtagDescription.value = '';
+    window.uploader.resetSettings();
 
     document.removeEventListener('keydown', onEscPress);
   };
