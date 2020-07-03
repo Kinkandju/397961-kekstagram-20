@@ -66,5 +66,4 @@
 
   uploadStart.addEventListener('change', openSettings);
   uploadClose.addEventListener('click', window.uploader.closeSettings);
-  uploadClose.addEventListener('keydown', onEscPress);
 })();
