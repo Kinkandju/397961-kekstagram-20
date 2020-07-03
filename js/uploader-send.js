@@ -19,25 +19,26 @@
 
     var successButton = document.querySelector('.success__button');
 
-    var onSuccessButtonClick = function () {
+    function addHandlersToSuccessButton() {
       removeElement('.success');
+
       successButton.removeEventListener('click', onSuccessButtonClick);
       document.removeEventListener('click', onDocumentClick);
+      document.removeEventListener('keydown', onDocumentKeydown);
+    }
+
+    var onSuccessButtonClick = function () {
+      addHandlersToSuccessButton();
     };
 
     var onDocumentClick = function () {
-      removeElement('.success');
-      document.removeEventListener('click', onDocumentClick);
+      addHandlersToSuccessButton();
     };
 
     var onDocumentKeydown = function (evt) {
-      removeElement('.success');
+      addHandlersToSuccessButton();
 
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-
-        document.removeEventListener('keydown', onDocumentKeydown);
-      }
+      window.utils.isEscEvent(evt, onDocumentKeydown);
     };
 
     successButton.addEventListener('click', onSuccessButtonClick);
@@ -56,25 +57,26 @@
 
     var errorButton = document.querySelector('.error__button');
 
-    var onErrorButtonClick = function () {
+    function addHandlersToErrorButton() {
       removeElement('.error');
+
       errorButton.removeEventListener('click', onErrorButtonClick);
       document.removeEventListener('click', onDocumentClick);
+      document.removeEventListener('keydown', onDocumentKeydown);
+    }
+
+    var onErrorButtonClick = function () {
+      addHandlersToErrorButton();
     };
 
     var onDocumentClick = function () {
-      removeElement('.error');
-      document.removeEventListener('click', onDocumentClick);
+      addHandlersToErrorButton();
     };
 
     var onDocumentKeydown = function (evt) {
-      removeElement('.error');
+      addHandlersToErrorButton();
 
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-
-        document.removeEventListener('keydown', onDocumentKeydown);
-      }
+      window.utils.isEscEvent(evt, onDocumentKeydown);
     };
 
     errorButton.addEventListener('click', onErrorButtonClick);
@@ -83,14 +85,10 @@
   }
 
   var successHandler = function () {
-    uploadImg.classList.add('hidden');
-    document.body.classList.remove('modal-open');
+    window.uploader.closeSettings();
 
     createSuccessInformationPopup();
 
-    window.uploader.resetSettings();
-
-    form.removeEventListener('submit', onFormSubmit);
     form.reset();
   };
 
@@ -101,11 +99,11 @@
     createErrorInformationPopup(errorMessage);
   };
 
-  var onFormSubmit = function (evt) {
-    evt.preventDefault();
+  window.uploaderSend = {
+    onFormSubmit: function (evt) {
+      evt.preventDefault();
 
-    window.backend.save(new FormData(form), successHandler, errorHandler);
+      window.backend.save(new FormData(form), successHandler, errorHandler);
+    }
   };
-
-  form.addEventListener('submit', onFormSubmit);
 })();

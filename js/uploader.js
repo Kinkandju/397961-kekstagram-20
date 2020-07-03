@@ -2,6 +2,9 @@
 
 (function () {
   var DEFAULT_SCALE = '100';
+
+  var form = document.querySelector('.img-upload__form');
+
   var uploadStart = document.querySelector('#upload-file');
   var uploadClose = document.querySelector('#upload-cancel');
   var uploadImg = document.querySelector('.img-upload__overlay');
@@ -15,15 +18,11 @@
   var hashtagDescription = document.querySelector('.text__description');
 
   var onEscPress = function (evt) {
-    if (evt.key === 'Escape' && evt.target !== hashtagInput && evt.target !== hashtagDescription) {
-      evt.preventDefault();
+    if (evt.target !== hashtagInput && evt.target !== hashtagDescription) {
 
-      closeSettings();
+      window.utils.isEscEvent(evt, window.uploader.closeSettings);
     }
   };
-
-  // Если выйти из окна загрузки с помощью Esc, то при повторном добавлении
-  // этой же фотографии окно загрузки не открывается (п.1.3).
 
   // Если изображение выбирается второй раз
   // подряд, то при уменьшении или увеличении масштаба происходит расчет от
@@ -40,28 +39,32 @@
     picturePreview.style.transform = 'scale(1)';
 
     document.addEventListener('keydown', onEscPress);
+    form.addEventListener('submit', window.uploaderSend.onFormSubmit);
+  };
+
+  var resetSettings = function () {
+    uploadStart.value = '';
+    hashtagInput.value = '';
+    hashtagDescription.value = '';
+
+    uploadEffectLevel.classList.add('hidden');
+    picturePreview.className = '';
+    uploadPrewiew.style.filter = 'none';
   };
 
   window.uploader = {
-    resetSettings: function () {
-      hashtagInput.value = '';
-      hashtagDescription.value = '';
+    closeSettings: function () {
+      uploadImg.classList.add('hidden');
+      document.body.classList.remove('modal-open');
 
-      uploadEffectLevel.classList.add('hidden');
-      picturePreview.className = '';
-      uploadPrewiew.style.filter = 'none';
+      resetSettings();
+
+      document.removeEventListener('keydown', onEscPress);
+      form.removeEventListener('submit', window.uploaderSend.onFormSubmit);
     }
   };
 
-  var closeSettings = function () {
-    uploadImg.classList.add('hidden');
-    document.body.classList.remove('modal-open');
-
-    window.uploader.resetSettings();
-
-    document.removeEventListener('keydown', onEscPress);
-  };
-
   uploadStart.addEventListener('change', openSettings);
-  uploadClose.addEventListener('click', closeSettings);
+  uploadClose.addEventListener('click', window.uploader.closeSettings);
+  uploadClose.addEventListener('keydown', onEscPress);
 })();
