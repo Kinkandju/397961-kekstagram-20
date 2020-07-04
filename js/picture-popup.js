@@ -43,11 +43,7 @@
   }
 
   var onEscPress = function (evt) {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-
-      onBigPictureClose();
-    }
+    window.utils.isEscEvent(evt, onBigPictureClose);
   };
 
   window.picturePopup = {

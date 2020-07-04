@@ -11,6 +11,14 @@
       return elements[randomItemIndex];
     },
 
+    isEscEvent: function (evt, action) {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+
+        action();
+      }
+    },
+
     parseHashtag: function (textHashtags) {
       return textHashtags.toLowerCase().split(' ');
     },
