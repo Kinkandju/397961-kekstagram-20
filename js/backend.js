@@ -7,7 +7,7 @@
   };
 
   var STATUS = 200;
-  var TIMEOUT = 500;
+  var TIMEOUT = 10000;
 
   function getDataFromServer(onLoad, onError) {
     var xhr = new XMLHttpRequest();
