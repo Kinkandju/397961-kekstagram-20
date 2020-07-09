@@ -56,12 +56,13 @@
   uploadEffects.addEventListener('change', function (evt) {
     changeFilter(evt.target.value);
 
-    // var defaultPosition = levelLine.clientWidth + 'px';
-    // pin.style.left = defaultPosition;
-    // depthLine.style.width = defaultPosition;
-    // effectLevelContainer.value = levelLine.clientWidth;
-    // При переключении с оригинала на иной фильтр эффект
-    // не срабатывает (п.2.2).
+    uploadPrewiew.style.filter = '';
+
+    var defaultPosition = levelLine.clientWidth + 'px';
+
+    pin.style.left = defaultPosition;
+    depthLine.style.width = defaultPosition;
+    effectLevelContainer.value = levelLine.clientWidth;
   });
 
   pin.addEventListener('mousedown', function (evt) {

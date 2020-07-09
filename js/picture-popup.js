@@ -1,7 +1,9 @@
 'use strict';
 
 (function () {
+  var MIN_COMMENTS = 0;
   var MAX_COMMENTS = 5;
+
   var bigPicture = document.querySelector('.big-picture');
 
   function showBigPicture(picture) {
@@ -27,17 +29,37 @@
       return newComment;
     }
 
+    if (picture.comments.length > MAX_COMMENTS) {
+      bigPicture.querySelector('.comments-loader').classList.remove('hidden');
+    }
+
     var commentsContainer = bigPicture.querySelector('.social__comments');
+    var commentIndex = MIN_COMMENTS;
+    var commentLimit = MAX_COMMENTS;
 
     function showComments(container, comments) {
       container.innerHTML = '';
+      commentLimit += commentIndex;
 
-      for (var i = 0; i < MAX_COMMENTS; i++) {
-        container.append(createCommentElement(comments[i]));
+      for (commentIndex; commentIndex < commentLimit && commentIndex < picture.comments.length; commentIndex++) {
+        container.appendChild(createCommentElement(comments[commentIndex]));
+      }
+
+      if (commentIndex === picture.comments.length) {
+        bigPicture.querySelector('.comments-loader').classList.add('hidden');
+        commentsLoader.removeEventListener('click', onCommentLoaderClick);
       }
     }
 
     showComments(commentsContainer, picture.comments);
+
+    var commentsLoader = bigPicture.querySelector('.comments-loader');
+
+    function onCommentLoaderClick() {
+      showComments(commentsContainer, picture.comments);
+    }
+
+    commentsLoader.addEventListener('click', onCommentLoaderClick);
 
     document.body.classList.add('modal-open');
   }

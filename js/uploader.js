@@ -24,19 +24,13 @@
     }
   };
 
-  // Если изображение выбирается второй раз
-  // подряд, то при уменьшении или увеличении масштаба происходит расчет от
-  // старого значения, которое было выбрано в первый раз.
-  // Например, при первом просмотре было выбрано 50%. При последующем
-  // просмотре в окне показано 100%, если нажать на + , то станет 75% (п.2.1).
-
-
   var openSettings = function () {
     uploadImg.classList.remove('hidden');
     document.body.classList.add('modal-open');
 
     scaleControl.value = DEFAULT_SCALE + '%';
-    picturePreview.style.transform = 'scale(1)';
+
+    uploadEffectLevel.classList.add('hidden');
 
     document.addEventListener('keydown', onEscPress);
     form.addEventListener('submit', window.uploaderSend.onFormSubmit);
@@ -46,8 +40,7 @@
     uploadStart.value = '';
     hashtagInput.value = '';
     hashtagDescription.value = '';
-
-    uploadEffectLevel.classList.add('hidden');
+    picturePreview.style.transform = 'scale(1)';
     picturePreview.className = '';
     uploadPrewiew.style.filter = 'none';
   };
