@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var MIN_COMMENTS = 0;
   var MAX_COMMENTS = 5;
 
   var bigPicture = document.querySelector('.big-picture');
@@ -15,7 +14,6 @@
     bigPicture.querySelector('.social__caption').textContent = picture.description;
 
     bigPicture.querySelector('.social__comment-count').classList.add('hidden');
-    bigPicture.querySelector('.comments-loader').classList.add('hidden');
 
     function createCommentElement(comments) {
       var newComment = document.createElement('li');
@@ -28,38 +26,74 @@
 
       return newComment;
     }
+    // -----------------------------------------------------------------------------
 
-    if (picture.comments.length > MAX_COMMENTS) {
-      bigPicture.querySelector('.comments-loader').classList.remove('hidden');
+    // var i = 0; // Внутри функции счетчик отказывается нормально работать.
+
+    // function showComments(comments) {
+    //   var commentsContainer = bigPicture.querySelector('.social__comments');
+    //   var commentsLoader = bigPicture.querySelector('.comments-loader');
+
+    //   if (comments.length > MAX_COMMENTS) {
+    //     commentsLoader.classList.remove('hidden');
+    //     commentsLoader.addEventListener('click', onCommentLoaderClick);
+    //   }
+
+    //   commentsContainer.innerHTML = '';
+    //   MAX_COMMENTS += i;
+
+    //   for (i; i < MAX_COMMENTS && i < comments.length; i++) {
+    //     commentsContainer.appendChild(createCommentElement(comments[i]));
+    //   }
+
+    //   if (i === comments.length) {
+    //     commentsLoader.classList.add('hidden');
+    //     commentsLoader.removeEventListener('click', onCommentLoaderClick);
+    //   }
+    // }
+
+    // function onCommentLoaderClick() {
+    //   showComments(picture.comments);
+    // }
+
+    // showComments(picture.comments);
+    // ----------------------------------------------------------------------------
+
+    function createCommentsFragment(comments) {
+      var commentsFragment = document.createDocumentFragment();
+      var commentsData = comments.slice(MAX_COMMENTS, MAX_COMMENTS += MAX_COMMENTS); // Да, это ужасно.
+
+      commentsData.forEach(function (comment) {
+        commentsFragment.appendChild(createCommentElement(comment));
+      });
+
+      return commentsFragment;
     }
 
-    var commentsContainer = bigPicture.querySelector('.social__comments');
-    var commentIndex = MIN_COMMENTS;
-    var commentLimit = MAX_COMMENTS;
+    function showComments(comments) {
+      var commentsLoader = bigPicture.querySelector('.comments-loader');
+      commentsLoader.classList.add('hidden');
+      commentsLoader.removeEventListener('click', onCommentsLoaderClick);
 
-    function showComments(container, comments) {
-      container.innerHTML = '';
-      commentLimit += commentIndex;
-
-      for (commentIndex; commentIndex < commentLimit && commentIndex < picture.comments.length; commentIndex++) {
-        container.appendChild(createCommentElement(comments[commentIndex]));
+      function onCommentsLoaderClick() {
+        commentsContainer.appendChild(createCommentsFragment(comments));
       }
 
-      if (commentIndex === picture.comments.length) {
-        bigPicture.querySelector('.comments-loader').classList.add('hidden');
-        commentsLoader.removeEventListener('click', onCommentLoaderClick);
+      var commentsContainer = bigPicture.querySelector('.social__comments');
+      commentsContainer.innerHTML = '';
+
+      for (var i = 0; i < MAX_COMMENTS && i < comments.length; i++) {
+        commentsContainer.appendChild(createCommentElement(comments[i]));
+
+        if (comments.length > MAX_COMMENTS) {
+          commentsLoader.classList.remove('hidden');
+          commentsLoader.addEventListener('click', onCommentsLoaderClick);
+        }
       }
     }
 
-    showComments(commentsContainer, picture.comments);
-
-    var commentsLoader = bigPicture.querySelector('.comments-loader');
-
-    function onCommentLoaderClick() {
-      showComments(commentsContainer, picture.comments);
-    }
-
-    commentsLoader.addEventListener('click', onCommentLoaderClick);
+    showComments(picture.comments);
+    // ----------------------------------------------------------------------------
 
     document.body.classList.add('modal-open');
   }
