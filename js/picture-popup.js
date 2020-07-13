@@ -26,42 +26,9 @@
 
       return newComment;
     }
-    // -----------------------------------------------------------------------------
 
-    // var i = 0; // Внутри функции счетчик отказывается нормально работать.
-
-    // function showComments(comments) {
-    //   var commentsContainer = bigPicture.querySelector('.social__comments');
-    //   var commentsLoader = bigPicture.querySelector('.comments-loader');
-
-    //   if (comments.length > MAX_COMMENTS) {
-    //     commentsLoader.classList.remove('hidden');
-    //     commentsLoader.addEventListener('click', onCommentLoaderClick);
-    //   }
-
-    //   commentsContainer.innerHTML = '';
-    //   MAX_COMMENTS += i;
-
-    //   for (i; i < MAX_COMMENTS && i < comments.length; i++) {
-    //     commentsContainer.appendChild(createCommentElement(comments[i]));
-    //   }
-
-    //   if (i === comments.length) {
-    //     commentsLoader.classList.add('hidden');
-    //     commentsLoader.removeEventListener('click', onCommentLoaderClick);
-    //   }
-    // }
-
-    // function onCommentLoaderClick() {
-    //   showComments(picture.comments);
-    // }
-
-    // showComments(picture.comments);
-    // ----------------------------------------------------------------------------
-
-    function createCommentsFragment(comments) {
+    function createCommentsFragment(commentsData) {
       var commentsFragment = document.createDocumentFragment();
-      var commentsData = comments.slice(MAX_COMMENTS, MAX_COMMENTS += MAX_COMMENTS); // Да, это ужасно.
 
       commentsData.forEach(function (comment) {
         commentsFragment.appendChild(createCommentElement(comment));
@@ -72,28 +39,29 @@
 
     function showComments(comments) {
       var commentsLoader = bigPicture.querySelector('.comments-loader');
-      commentsLoader.classList.add('hidden');
-      commentsLoader.removeEventListener('click', onCommentsLoaderClick);
+      commentsLoader.classList.remove('hidden');
+      commentsLoader.addEventListener('click', onCommentsLoaderClick);
+
+      var commentsSection = comments.slice(0, MAX_COMMENTS);
+      var part = 0;
 
       function onCommentsLoaderClick() {
-        commentsContainer.appendChild(createCommentsFragment(comments));
+        commentsSection = comments.slice(part * MAX_COMMENTS, part * MAX_COMMENTS + MAX_COMMENTS);
+        part++;
+        commentsContainer.appendChild(createCommentsFragment(commentsSection));
+
+        if (part * MAX_COMMENTS >= comments.length) {
+          commentsLoader.classList.add('hidden');
+          commentsLoader.removeEventListener('click', onCommentsLoaderClick);
+        }
       }
 
       var commentsContainer = bigPicture.querySelector('.social__comments');
       commentsContainer.innerHTML = '';
-
-      for (var i = 0; i < MAX_COMMENTS && i < comments.length; i++) {
-        commentsContainer.appendChild(createCommentElement(comments[i]));
-
-        if (comments.length > MAX_COMMENTS) {
-          commentsLoader.classList.remove('hidden');
-          commentsLoader.addEventListener('click', onCommentsLoaderClick);
-        }
-      }
+      onCommentsLoaderClick();
     }
 
     showComments(picture.comments);
-    // ----------------------------------------------------------------------------
 
     document.body.classList.add('modal-open');
   }
@@ -112,14 +80,14 @@
     }
   };
 
+  var bigPictureClose = document.querySelector('.big-picture__cancel');
+
   var onBigPictureClose = function () {
     bigPicture.classList.add('hidden');
     document.body.classList.remove('modal-open');
 
     document.removeEventListener('keydown', onEscPress);
   };
-
-  var bigPictureClose = document.querySelector('.big-picture__cancel');
 
   bigPictureClose.addEventListener('click', onBigPictureClose);
   bigPictureClose.addEventListener('keydown', onBigPictureClose);
