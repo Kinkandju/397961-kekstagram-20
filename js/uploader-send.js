@@ -38,7 +38,7 @@
     var onDocumentKeydown = function (evt) {
       addHandlersToSuccessButton();
 
-      window.utils.isEscEvent(evt, onDocumentKeydown);
+      window.utils.isEscEvent(evt.target, onDocumentKeydown);
     };
 
     successButton.addEventListener('click', onSuccessButtonClick);
@@ -92,7 +92,7 @@
       var onDocumentKeydown = function (evt) {
         addHandlersToErrorButton();
 
-        window.utils.isEscEvent(evt, onDocumentKeydown);
+        window.utils.isEscEvent(evt.target, onDocumentKeydown);
       };
 
       errorButton.addEventListener('click', onErrorButtonClick);
