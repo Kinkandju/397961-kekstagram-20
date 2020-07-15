@@ -58,7 +58,6 @@
     }
   };
 
-  uploadStart.addEventListener('change', openSettings);
   uploadStart.addEventListener('change', function () {
     var file = uploadStart.files[0];
     var fileName = file.name.toLowerCase();
@@ -72,9 +71,15 @@
 
       reader.addEventListener('load', function () {
         uploadPrewiew.src = reader.result;
+        openSettings();
       });
 
       reader.readAsDataURL(file);
+    } else {
+      var errorMessage = 'Допустимые форматы файлов для загрузки: *.' + FILE_TYPES.join(', *.') + '.';
+      window.uploaderSend.createErrorInformationPopup(errorMessage);
+
+      uploadStart.value = '';
     }
   });
   uploadClose.addEventListener('click', window.uploader.closeSettings);

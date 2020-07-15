@@ -46,44 +46,6 @@
     document.addEventListener('keydown', onDocumentKeydown);
   }
 
-  function createErrorInformationPopup(errorMessage) {
-    var errorTemplate = document.querySelector('#error');
-    var errorElement = errorTemplate.content.cloneNode(true);
-
-    errorElement.querySelector('.error__title').textContent = errorMessage;
-    errorElement.querySelector('.error__title').style.lineHeight = '1';
-
-    main.appendChild(errorElement);
-
-    var errorButton = document.querySelector('.error__button');
-
-    function addHandlersToErrorButton() {
-      removeElement('.error');
-
-      errorButton.removeEventListener('click', onErrorButtonClick);
-      document.removeEventListener('click', onDocumentClick);
-      document.removeEventListener('keydown', onDocumentKeydown);
-    }
-
-    var onErrorButtonClick = function () {
-      addHandlersToErrorButton();
-    };
-
-    var onDocumentClick = function () {
-      addHandlersToErrorButton();
-    };
-
-    var onDocumentKeydown = function (evt) {
-      addHandlersToErrorButton();
-
-      window.utils.isEscEvent(evt, onDocumentKeydown);
-    };
-
-    errorButton.addEventListener('click', onErrorButtonClick);
-    document.addEventListener('click', onDocumentClick);
-    document.addEventListener('keydown', onDocumentKeydown);
-  }
-
   var successHandler = function () {
     window.uploader.closeSettings();
 
@@ -96,10 +58,48 @@
     uploadImg.classList.add('hidden');
     document.body.classList.remove('modal-open');
 
-    createErrorInformationPopup(errorMessage);
+    window.uploaderSend.createErrorInformationPopup(errorMessage);
   };
 
   window.uploaderSend = {
+    createErrorInformationPopup: function (errorMessage) {
+      var errorTemplate = document.querySelector('#error');
+      var errorElement = errorTemplate.content.cloneNode(true);
+
+      errorElement.querySelector('.error__title').textContent = errorMessage;
+      errorElement.querySelector('.error__title').style.lineHeight = '1';
+
+      main.appendChild(errorElement);
+
+      var errorButton = document.querySelector('.error__button');
+
+      function addHandlersToErrorButton() {
+        removeElement('.error');
+
+        errorButton.removeEventListener('click', onErrorButtonClick);
+        document.removeEventListener('click', onDocumentClick);
+        document.removeEventListener('keydown', onDocumentKeydown);
+      }
+
+      var onErrorButtonClick = function () {
+        addHandlersToErrorButton();
+      };
+
+      var onDocumentClick = function () {
+        addHandlersToErrorButton();
+      };
+
+      var onDocumentKeydown = function (evt) {
+        addHandlersToErrorButton();
+
+        window.utils.isEscEvent(evt, onDocumentKeydown);
+      };
+
+      errorButton.addEventListener('click', onErrorButtonClick);
+      document.addEventListener('click', onDocumentClick);
+      document.addEventListener('keydown', onDocumentKeydown);
+    },
+
     onFormSubmit: function (evt) {
       evt.preventDefault();
 
