@@ -10,8 +10,6 @@
   var uploadClose = document.querySelector('#upload-cancel');
   var uploadImg = document.querySelector('.img-upload__overlay');
 
-  var scaleControl = document.querySelector('.scale__control--value');
-  var picturePreview = document.querySelector('.img-upload__preview');
   var uploadPrewiew = document.querySelector('.img-upload__preview img');
   var uploadEffectLevel = document.querySelector('.img-upload__effect-level');
 
@@ -29,7 +27,7 @@
     uploadImg.classList.remove('hidden');
     document.body.classList.add('modal-open');
 
-    scaleControl.value = DEFAULT_SCALE + '%';
+    window.uploaderScale.resizePicture(DEFAULT_SCALE);
 
     uploadEffectLevel.classList.add('hidden');
 
@@ -41,8 +39,6 @@
     uploadStart.value = '';
     hashtagInput.value = '';
     hashtagDescription.value = '';
-    picturePreview.style.transform = 'scale(1)';
-    picturePreview.className = '';
     uploadPrewiew.style.filter = 'none';
   };
 

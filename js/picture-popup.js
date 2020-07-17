@@ -2,6 +2,7 @@
 
 (function () {
   var MAX_COMMENTS = 5;
+  var part;
 
   var bigPicture = document.querySelector('.big-picture');
 
@@ -43,7 +44,6 @@
       commentsLoader.addEventListener('click', onCommentsLoaderClick);
 
       var commentsSection = comments.slice(0, MAX_COMMENTS);
-      var part = 0;
 
       function onCommentsLoaderClick() {
         commentsSection = comments.slice(part * MAX_COMMENTS, part * MAX_COMMENTS + MAX_COMMENTS);
@@ -74,6 +74,7 @@
     bigPictureOpen: function (evt, picture) {
       evt.preventDefault();
 
+      part = 0;
       showBigPicture(picture);
 
       document.addEventListener('keydown', onEscPress);

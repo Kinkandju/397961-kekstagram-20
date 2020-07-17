@@ -8,12 +8,14 @@
   var scaleControlSmaller = document.querySelector('.scale__control--smaller');
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var scaleControl = document.querySelector('.scale__control--value');
-  var picturePreview = document.querySelector('.img-upload__preview');
+  var uploadPrewiew = document.querySelector('.img-upload__preview img');
 
-  function resizePicture(baseScale) {
-    scaleControl.value = baseScale + '%';
-    picturePreview.style.transform = 'scale(' + baseScale * 0.01 + ')';
-  }
+  window.uploaderScale = {
+    resizePicture: function (baseScale) {
+      scaleControl.value = baseScale + '%';
+      uploadPrewiew.style.transform = 'scale(' + baseScale * 0.01 + ')';
+    }
+  };
 
   var onScaleControlClick = function (evt) {
     var currentValue = parseInt(scaleControl.value, 10);
@@ -28,7 +30,7 @@
     }
 
     if (currentValue >= MIN_SCALE && currentValue <= MAX_SCALE) {
-      resizePicture(currentValue);
+      window.uploaderScale.resizePicture(currentValue);
     }
   };
 

@@ -1,6 +1,15 @@
 'use strict';
 
 (function () {
+  var FILTERS_TYPES = {
+    CHROME: 'chrome',
+    SEPIA: 'sepia',
+    MARVIN: 'marvin',
+    PHOBOS: 'phobos',
+    HEAT: 'heat',
+    NONE: 'none'
+  };
+
   var uploadPrewiew = document.querySelector('.img-upload__preview img');
   var uploadEffectLevel = document.querySelector('.img-upload__effect-level');
   var effectLevelContainer = document.querySelector('.effect-level__value');
@@ -20,27 +29,27 @@
     var effect = '';
 
     switch (filterType) {
-      case 'chrome':
+      case FILTERS_TYPES.CHROME:
         effect = 'grayscale(' + effectLevel * 0.01 + ')';
         break;
-      case 'sepia':
+      case FILTERS_TYPES.SEPIA:
         effect = 'sepia(' + effectLevel * 0.01 + ')';
         break;
-      case 'marvin':
+      case FILTERS_TYPES.MARVIN:
         effect = 'invert(' + effectLevel + '%)';
         break;
-      case 'phobos':
+      case FILTERS_TYPES.PHOBOS:
         effect = 'blur(' + effectLevel * 0.03 + 'px)';
         break;
-      case 'heat':
+      case FILTERS_TYPES.HEAT:
         effect = 'brightness(' + effectLevel * 0.03 + ')';
         break;
-      case 'none':
+      case FILTERS_TYPES.NONE:
         effect = 'none';
         break;
     }
 
-    if (effect === 'none') {
+    if (effect === FILTERS_TYPES.NONE) {
       uploadEffectLevel.classList.add('hidden');
     } else {
       uploadEffectLevel.classList.remove('hidden');

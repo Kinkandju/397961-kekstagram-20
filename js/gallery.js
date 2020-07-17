@@ -2,6 +2,11 @@
 
 (function () {
   var FILTER_PICTURES_COUNT = 10;
+  var FILTERS_GALLERY = {
+    DEFAULT: 'filter-default',
+    RANDOM: 'filter-random',
+    DISCUSSED: 'filter-discussed'
+  };
 
   var picturesData;
 
@@ -89,13 +94,13 @@
     removePictures();
 
     switch (evt.target.id) {
-      case 'filter-default':
+      case FILTERS_GALLERY.DEFAULT:
         renderPictures(picturesData.slice());
         break;
-      case 'filter-random':
+      case FILTERS_GALLERY.RANDOM:
         renderPictures(newFilteredPictures(picturesData.slice()));
         break;
-      case 'filter-discussed':
+      case FILTERS_GALLERY.DISCUSSED:
         renderPictures(newFilteredPicturesComments(picturesData.slice()));
         break;
     }
