@@ -12,7 +12,10 @@
 
   window.uploaderScale = {
     resizePicture: function (baseScale) {
-      scaleControl.value = baseScale + '%';
+      var newScale = baseScale + '%';
+
+      scaleControl.value = newScale;
+      scaleControl.setAttribute('value', newScale);
       uploadPrewiew.style.transform = 'scale(' + baseScale * 0.01 + ')';
     }
   };
